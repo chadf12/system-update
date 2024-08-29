@@ -1,0 +1,17 @@
+# update_centos9.yml
+---
+- hosts: sales
+  gather_facts: true
+  become: yes
+  tasks:
+    - name: Update all packages using dnf
+      dnf:
+        name: "*"
+        state: latest
+
+    - name: Reboot if updates were installed
+      reboot:
+        reboot_timeout: 300
+      when: ansible_facts['yum_updates_available'] | bool
+
+    # Add more tasks as needed (e.g., notifying admins, logging, etc.)
